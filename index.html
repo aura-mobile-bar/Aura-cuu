@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1604,7 +1603,7 @@ function sendBoth(isAura){
   const telMx=tel?(tel.startsWith('52')?tel:'52'+tel):null;
   const msgCliente=telMx?encodeURIComponent(buildWAMsgCliente(rec.folio)):null;
   const waAura=`https://wa.me/${AURA_WA}?text=${msgAura}`;
-  const waCliente=telMx?`https://wa.me/${AURA_WA}?text=${msgCliente}`:null;
+  const waCliente=telMx?`https://wa.me/${telMx}?text=${msgCliente}`:null;
 
   // Guardar rec en variable global para acceso en PDF y firma
   window._lastRec = rec;
@@ -1627,17 +1626,17 @@ function sendBoth(isAura){
         <div style="font-size:21px;font-weight:800;color:#c9a84c;letter-spacing:2px;">${rec.folio}</div>
       </div>
 
-      <!-- ENVIAR A AURA -->
+      <!-- ENVIAR COTIZACIÓN -->
       ${waCliente ? `
-      <div style="background:#0d1f0d;border:1.5px solid #25D366;border-radius:12px;padding:14px;margin-bottom:14px;text-align:left;">
-        <div style="font-size:10px;color:#25D366;font-weight:700;letter-spacing:1px;margin-bottom:8px;">ENVÍA TU COTIZACIÓN A AURA</div>
+      <div style="background:#0a1829;border:1.5px solid #4e9fff;border-radius:12px;padding:14px;margin-bottom:14px;text-align:left;">
+        <div style="font-size:10px;color:#4e9fff;font-weight:700;letter-spacing:1px;margin-bottom:8px;">ENVÍA TU COTIZACIÓN A AURA</div>
         <div style="font-size:11px;color:#aaa;margin-bottom:10px;line-height:1.5;">Se abrirá WhatsApp con tu cotización lista. Solo presiona <strong style="color:#fff;">Enviar ▶</strong> dentro de WhatsApp.</div>
-        <button id="btn-copia-cliente" onclick="window.open('${waCliente}','_blank');setTimeout(()=>{var b=document.getElementById('btn-copia-cliente');if(b){b.style.background='#1a5c1a';b.innerHTML='✅ ¡Enviado! — regresa aquí';}},800);" style="width:100%;background:#25D366;color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;">
+        <button id="btn-copia-cliente" onclick="window.open('${waCliente}','_blank');setTimeout(()=>{var b=document.getElementById('btn-copia-cliente');if(b){b.style.background='#0a2a4a';b.innerHTML='✅ ¡Enviado!';}},800);" style="width:100%;background:#1a3a5c;color:#8ec9ff;border:1.5px solid #4e9fff;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;">
           📲 Enviar cotización a Aura
         </button>
       </div>` : `
       <div style="background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:14px;margin-bottom:14px;text-align:center;">
-        <div style="font-size:12px;color:#c0392b;">⚠️ No se registró número de teléfono — no se puede enviar por WhatsApp</div>
+        <div style="font-size:12px;color:#c0392b;">⚠️ No se registró número de teléfono</div>
       </div>`}
 
       <div style="font-size:10px;color:#555;margin-bottom:14px;">Aura Mobile Bar · ${new Date().getFullYear()}</div>
@@ -2063,7 +2062,7 @@ function buildWAMsgCliente(folio){
   const dur=getDur();
   const horaFin=calcHoraFin(f.hora,dur);
   const facturaLine=factura?`\n💸 IVA (16%): $${iva.toLocaleString('es-MX')} MXN\n💰 Total con IVA: $${total.toLocaleString('es-MX')} MXN`:`\n💰 Total: $${price.toLocaleString('es-MX')} MXN`;
-  return`✨ *COTIZACIÓN AURA MOBILE BAR* ✨\n📋 Folio: ${folio}\n\n¡Hola ${f.nombre}! 🐾\nAquí tienes el resumen de tu cotización:\n\n📅 *Fecha:* ${fdate(f.fecha)}\n⏰ *Inicio:* ${toAmPm(f.hora)} · *Fin:* ${horaFin}\n🎉 *Evento:* ${f.tipo||'—'}\n🏛 *Lugar:* ${f.lugar||'—'}\n\n🍹 *Categoría:* ${CLAB[S.cat]}\n📦 *Paquete:* ${getPaqLabel()} · ${dur}\n\n🎨 *Sabores elegidos:*\n${fstr}\n\n━━━━━━━━━━━━━━━━━━━━${facturaLine}\n💳 *Anticipo (${pct}%):* $${ant.toLocaleString('es-MX')} MXN\n💳 *Saldo restante:* $${rest.toLocaleString('es-MX')} MXN\n\n📲 *Datos de pago BBVA:*\nTitular: Aracely Almanza Godoy\nTarjeta: 4152 3138 5606 3206\nNº Cuenta: 1509 4021 84\nCLABE: 012 180 0150 9402 1846\n\n_Recuerda firmar y enviar tu contrato + realizar el anticipo en las próximas 24 horas para reservar tu fecha_ 🌟`;
+  return`✨ *COTIZACIÓN AURA MOBILE BAR* ✨\n📋 Folio: ${folio}\n\n¡Hola ${f.nombre}! 🐾\nAquí tienes el resumen de tu cotización:\n\n📅 *Fecha:* ${fdate(f.fecha)}\n⏰ *Inicio:* ${toAmPm(f.hora)} · *Fin:* ${horaFin}\n🎉 *Evento:* ${f.tipo||'—'}\n🏛 *Lugar:* ${f.lugar||'—'}${f.dir?'\n📍 '+f.dir:''}\n\n🍹 *Categoría:* ${CLAB[S.cat]}\n📦 *Paquete:* ${getPaqLabel()} · ${dur}\n\n🎨 *Sabores elegidos:*\n${fstr}\n\n━━━━━━━━━━━━━━━━━━━━${facturaLine}\n💳 *Anticipo (${pct}%):* $${ant.toLocaleString('es-MX')} MXN\n💳 *Saldo restante:* $${rest.toLocaleString('es-MX')} MXN\n\n📲 *Datos de pago BBVA:*\nTitular: Aracely Almanza Godoy\nTarjeta: 4152 3138 5606 3206\nNº Cuenta: 1509 4021 84\nCLABE: 012 180 0150 9402 1846\n\n_Recuerda firmar y enviar tu contrato + realizar el anticipo en las próximas 24 horas para reservar tu fecha_ 🌟`;
 }
 
 function sendToAura(){
