@@ -1629,15 +1629,8 @@ function sendBoth(isAura){
       <!-- PASO 1: Cliente → Aura -->
       <div style="background:#0d1f0d;border:1.5px solid #25D366;border-radius:12px;padding:14px;margin-bottom:10px;text-align:left;">
         <div style="font-size:10px;color:#25D366;font-weight:700;letter-spacing:1px;margin-bottom:8px;">PASO 1 — ENVÍA TU COTIZACIÓN A AURA</div>
-        <div style="font-size:11px;color:#aaa;margin-bottom:10px;line-height:1.5;">Al tocar el botón se abrirá WhatsApp con tu cotización lista. Solo presiona <strong style="color:#fff;">Enviar ▶</strong> dentro de WhatsApp.</div>
-        <button id="btn-envia-aura" onclick="
-          var intentUrl='intent://send/${AURA_WA}?text='+encodeURIComponent(decodeURIComponent('${msgAura}'))+'#Intent;scheme=whatsapp;package=com.whatsapp;end';
-          var waUrl='https://wa.me/${AURA_WA}?text=${msgAura}';
-          var isAndroid=/Android/i.test(navigator.userAgent);
-          if(isAndroid){window.location.href=intentUrl;}else{window.location.href=waUrl;}
-          var btn=document.getElementById('btn-envia-aura');
-          setTimeout(()=>{if(btn){btn.style.background='#1a5c1a';btn.innerHTML='✅ Paso 1 listo — regresa aquí';}},1000);
-        " style="width:100%;background:#25D366;color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;">
+        <div style="font-size:11px;color:#aaa;margin-bottom:10px;line-height:1.5;">Se abrirá WhatsApp con tu cotización lista. Solo presiona <strong style="color:#fff;">Enviar ▶</strong> dentro de WhatsApp.</div>
+        <button id="btn-envia-aura" onclick="window.open('${waAura}','_blank');setTimeout(()=>{var b=document.getElementById('btn-envia-aura');if(b){b.style.background='#1a5c1a';b.innerHTML='✅ Paso 1 listo — regresa aquí';}},800);" style="width:100%;background:#25D366;color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;">
           📲 Enviar a Aura Mobile Bar
         </button>
       </div>
@@ -1647,14 +1640,7 @@ function sendBoth(isAura){
       <div style="background:#0a1829;border:1.5px solid #4e9fff;border-radius:12px;padding:14px;margin-bottom:14px;text-align:left;">
         <div style="font-size:10px;color:#4e9fff;font-weight:700;letter-spacing:1px;margin-bottom:8px;">PASO 2 — GUARDA TU COPIA</div>
         <div style="font-size:11px;color:#aaa;margin-bottom:10px;line-height:1.5;">Guarda una copia de tu cotización en tu propio WhatsApp para tenerla de referencia.</div>
-        <button id="btn-copia-cliente" onclick="
-          var intentUrl='intent://send/${telMx}?text='+encodeURIComponent(decodeURIComponent('${msgCliente}'))+'#Intent;scheme=whatsapp;package=com.whatsapp;end';
-          var waUrl='https://wa.me/${telMx}?text=${msgCliente}';
-          var isAndroid=/Android/i.test(navigator.userAgent);
-          if(isAndroid){window.location.href=intentUrl;}else{window.location.href=waUrl;}
-          var btn=document.getElementById('btn-copia-cliente');
-          setTimeout(()=>{if(btn){btn.style.background='#0a2a4a';btn.innerHTML='✅ Paso 2 listo';}},1000);
-        " style="width:100%;background:#1a3a5c;color:#8ec9ff;border:1.5px solid #4e9fff;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;">
+        <button id="btn-copia-cliente" onclick="window.open('${waCliente}','_blank');setTimeout(()=>{var b=document.getElementById('btn-copia-cliente');if(b){b.style.background='#0a2a4a';b.innerHTML='✅ Paso 2 listo';}},800);" style="width:100%;background:#1a3a5c;color:#8ec9ff;border:1.5px solid #4e9fff;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;">
           💾 Guardar mi copia
         </button>
       </div>` : ''}
