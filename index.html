@@ -1617,21 +1617,51 @@ function sendBoth(isAura){
   // ── VISTA CLIENTE (sin PIN) ──
   if(!isAura){
     modal.innerHTML=`
-    <div style="background:#141414;border:1.5px solid #c9a84c;border-radius:20px;padding:28px 20px;width:100%;max-width:400px;text-align:center;">
-      <div style="font-size:48px;margin-bottom:12px;">🐾</div>
-      <div style="font-size:20px;font-weight:800;color:#c9a84c;font-family:'Cinzel',serif;margin-bottom:10px;">¡Cotización lista!</div>
-      <div style="font-size:13px;color:#aaa;margin-bottom:18px;line-height:1.6;">Tu cotización está lista.<br>Presiona el botón verde para enviarla a Aura y recibir tu contrato.</div>
-      <div style="background:#1a1a1a;border-radius:12px;padding:14px;margin-bottom:16px;">
-        <div style="font-size:11px;color:#666;margin-bottom:4px;">Tu número de folio</div>
-        <div style="font-size:22px;font-weight:800;color:#c9a84c;letter-spacing:2px;">${rec.folio}</div>
+    <div style="background:#141414;border:1.5px solid #c9a84c;border-radius:20px;padding:24px 18px;width:100%;max-width:400px;text-align:center;">
+      <div style="font-size:40px;margin-bottom:10px;">🐾</div>
+      <div style="font-size:19px;font-weight:800;color:#c9a84c;font-family:'Cinzel',serif;margin-bottom:8px;">¡Cotización lista!</div>
+      <div style="font-size:12px;color:#aaa;margin-bottom:14px;line-height:1.7;">Presiona <strong style="color:#fff;">ambos botones</strong> para enviar tu cotización.<br>Aura la recibirá y te contactará pronto.</div>
+      <div style="background:#1a1a1a;border-radius:10px;padding:12px;margin-bottom:16px;">
+        <div style="font-size:10px;color:#666;margin-bottom:3px;">Tu número de folio</div>
+        <div style="font-size:21px;font-weight:800;color:#c9a84c;letter-spacing:2px;">${rec.folio}</div>
       </div>
-      <div style="font-size:12px;color:#c9a84c;font-weight:700;margin-bottom:10px;">⬇️ Este paso es obligatorio para continuar</div>
-      <button onclick="(function(url){var a=document.createElement('a');a.href=url;a.rel='noopener';document.body.appendChild(a);a.click();document.body.removeChild(a);})('${waAura}');setTimeout(()=>{this.style.background='#1a8a3a';this.textContent='✅ ¡Enviado a Aura!';},600);" style="display:block;width:100%;box-sizing:border-box;background:#25D366;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:800;text-align:center;cursor:pointer;margin-bottom:12px;">
-        📲 Enviar cotización a Aura
-      </button>
-      <div style="font-size:11px;color:#555;margin-bottom:16px;">Aura Mobile Bar · ${new Date().getFullYear()}</div>
-      <button onclick="document.getElementById('send-both-modal').remove();pinUnlocked=false;newQuote();" style="width:100%;background:#1a1a1a;color:#c9a84c;border:1.5px solid #c9a84c;border-radius:12px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;">+ Nueva Cotización</button>
-      <button onclick="window.close();setTimeout(()=>{document.body.innerHTML='<div style=background:#000;height:100vh;display:flex;align-items:center;justify-content:center;color:#555;font-family:sans-serif;font-size:14px;>Puedes cerrar esta página</div>';},300);" style="width:100%;margin-top:8px;background:#111;color:#555;border:1px solid #333;border-radius:12px;padding:11px;font-size:13px;cursor:pointer;">✕ Cerrar página</button>
+
+      <!-- PASO 1: Cliente → Aura -->
+      <div style="background:#0d1f0d;border:1.5px solid #25D366;border-radius:12px;padding:14px;margin-bottom:10px;text-align:left;">
+        <div style="font-size:10px;color:#25D366;font-weight:700;letter-spacing:1px;margin-bottom:8px;">PASO 1 — ENVÍA TU COTIZACIÓN A AURA</div>
+        <div style="font-size:11px;color:#aaa;margin-bottom:10px;line-height:1.5;">Al tocar el botón se abrirá WhatsApp con tu cotización lista. Solo presiona <strong style="color:#fff;">Enviar ▶</strong> dentro de WhatsApp.</div>
+        <button id="btn-envia-aura" onclick="
+          var intentUrl='intent://send/${AURA_WA}?text='+encodeURIComponent(decodeURIComponent('${msgAura}'))+'#Intent;scheme=whatsapp;package=com.whatsapp;end';
+          var waUrl='https://wa.me/${AURA_WA}?text=${msgAura}';
+          var isAndroid=/Android/i.test(navigator.userAgent);
+          if(isAndroid){window.location.href=intentUrl;}else{window.location.href=waUrl;}
+          var btn=document.getElementById('btn-envia-aura');
+          setTimeout(()=>{if(btn){btn.style.background='#1a5c1a';btn.innerHTML='✅ Paso 1 listo — regresa aquí';}},1000);
+        " style="width:100%;background:#25D366;color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;">
+          📲 Enviar a Aura Mobile Bar
+        </button>
+      </div>
+
+      <!-- PASO 2: Guardar copia en el propio celular -->
+      ${waCliente ? `
+      <div style="background:#0a1829;border:1.5px solid #4e9fff;border-radius:12px;padding:14px;margin-bottom:14px;text-align:left;">
+        <div style="font-size:10px;color:#4e9fff;font-weight:700;letter-spacing:1px;margin-bottom:8px;">PASO 2 — GUARDA TU COPIA</div>
+        <div style="font-size:11px;color:#aaa;margin-bottom:10px;line-height:1.5;">Guarda una copia de tu cotización en tu propio WhatsApp para tenerla de referencia.</div>
+        <button id="btn-copia-cliente" onclick="
+          var intentUrl='intent://send/${telMx}?text='+encodeURIComponent(decodeURIComponent('${msgCliente}'))+'#Intent;scheme=whatsapp;package=com.whatsapp;end';
+          var waUrl='https://wa.me/${telMx}?text=${msgCliente}';
+          var isAndroid=/Android/i.test(navigator.userAgent);
+          if(isAndroid){window.location.href=intentUrl;}else{window.location.href=waUrl;}
+          var btn=document.getElementById('btn-copia-cliente');
+          setTimeout(()=>{if(btn){btn.style.background='#0a2a4a';btn.innerHTML='✅ Paso 2 listo';}},1000);
+        " style="width:100%;background:#1a3a5c;color:#8ec9ff;border:1.5px solid #4e9fff;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;">
+          💾 Guardar mi copia
+        </button>
+      </div>` : ''}
+
+      <div style="font-size:10px;color:#555;margin-bottom:14px;">Aura Mobile Bar · ${new Date().getFullYear()}</div>
+      <button onclick="document.getElementById('send-both-modal').remove();pinUnlocked=false;newQuote();" style="width:100%;background:#1a1a1a;color:#c9a84c;border:1.5px solid #c9a84c;border-radius:12px;padding:12px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:8px;">+ Nueva Cotización</button>
+      <button onclick="window.close();setTimeout(()=>{document.body.innerHTML='<div style=background:#000;height:100vh;display:flex;align-items:center;justify-content:center;color:#555;font-family:sans-serif;font-size:14px;>Puedes cerrar esta página</div>';},300);" style="width:100%;background:#111;color:#555;border:1px solid #333;border-radius:12px;padding:10px;font-size:12px;cursor:pointer;">✕ Cerrar página</button>
     </div>`;
     document.body.appendChild(modal);
     return;
