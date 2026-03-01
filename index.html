@@ -804,7 +804,7 @@ const CLAB={alc:'Con Alcohol',noalc:'Sin Alcohol',mixA:'Mixto A — 2 con alcoho
 const MAXALC={alc:3,noalc:0,mixA:2,mixB:1,mix6A:5,mix6B:4,mix6C:3,mix6D:2,mix6F:1},MAXNOALC={alc:0,noalc:3,mixA:1,mixB:2,mix6A:1,mix6B:2,mix6C:3,mix6D:4,mix6F:5};
 const SLBLS=['Tipo','Coctelería','Paquete','Sabores','Datos','Resumen'];
 const AURA_WA='526142101675'; // Aura Mobile Bar — Chihuahua MX
-const GITHUB_URL='https://aura-mobile-bar.github.io/aura-bar-cuu1/index.html';
+const GITHUB_URL='https://aura-mobile-bar.github.io/Aura-cuu';
 
 // ════ COCKTAIL DATA ════
 // key = internal id, display = shown name (no SA), type, brand, ing
@@ -1613,16 +1613,17 @@ function sendBoth(isAura){
   // ── VISTA CLIENTE (sin PIN) ──
   if(!isAura){
     modal.innerHTML=`
-    <div style="background:#141414;border:1.5px solid #c9a84c;border-radius:20px;padding:36px 24px;width:100%;max-width:400px;text-align:center;">
+    <div style="background:#141414;border:1.5px solid #c9a84c;border-radius:20px;padding:28px 20px;width:100%;max-width:400px;text-align:center;">
       <div style="font-size:48px;margin-bottom:12px;">🐾</div>
       <div style="font-size:20px;font-weight:800;color:#c9a84c;font-family:'Cinzel',serif;margin-bottom:10px;">¡Solicitud enviada!</div>
       <div style="font-size:13px;color:#aaa;margin-bottom:18px;line-height:1.6;">Hemos recibido tu información.<br>Nos pondremos en contacto contigo muy pronto.</div>
-      <div style="background:#1a1a1a;border-radius:12px;padding:14px;margin-bottom:20px;">
+      <div style="background:#1a1a1a;border-radius:12px;padding:14px;margin-bottom:16px;">
         <div style="font-size:11px;color:#666;margin-bottom:4px;">Tu número de folio</div>
         <div style="font-size:22px;font-weight:800;color:#c9a84c;letter-spacing:2px;">${rec.folio}</div>
       </div>
-      <a href="${waAura}" target="_blank" style="display:block;width:100%;box-sizing:border-box;background:#25D366;color:#fff;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:800;text-decoration:none;text-align:center;margin-bottom:8px;" onclick="this.style.opacity='.6';this.textContent='✅ Enviado';">
-        📲 Confirmar por WhatsApp
+      <div style="font-size:12px;color:#888;margin-bottom:10px;">Toca el botón para enviar tu cotización a Aura Mobile Bar:</div>
+      <a href="${waAura}" target="_blank" style="display:block;width:100%;box-sizing:border-box;background:#25D366;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:800;text-decoration:none;text-align:center;margin-bottom:12px;" onclick="setTimeout(()=>{this.style.opacity='.6';this.textContent='✅ ¡Enviado a Aura!';},500);">
+        📲 Enviar cotización a Aura
       </a>
       <div style="font-size:11px;color:#555;margin-bottom:16px;">Aura Mobile Bar · ${new Date().getFullYear()}</div>
       <button onclick="document.getElementById('send-both-modal').remove();pinUnlocked=false;newQuote();" style="width:100%;background:#1a1a1a;color:#c9a84c;border:1.5px solid #c9a84c;border-radius:12px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;">+ Nueva Cotización</button>
