@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -3433,47 +3432,54 @@ function auraSendPoliticas(){
 
 function auraSendFirmaLink(){
   if(!auraQ){toast('Primero carga una cotización');return;}
-  toast('1/4 inicio...');
+  toast('⏳ Generando...');
+  try{
   const tel=(auraQ.tel||'').replace(/\D/g,'');
   const nombre=auraQ.nombre||'cliente';
   const folio=auraQ.folio||'—';
   const fecha=auraQ.fecha||'—';
+
+  // Empaquetar datos del contrato en la URL para que funcione en cualquier celular
   const datos={
-    folio:auraQ.folio||'',nombre:auraQ.nombre||'',tel:auraQ.tel||'',
-    fecha:auraQ.fecha||'',hora:auraQ.hora||'',tipo:auraQ.tipo||'',
-    lugar:auraQ.lugar||'',dir:auraQ.dir||'',
-    cat:auraQ.cat||'',paq:auraQ.paq||0,tipo_cotizacion:auraQ.tipo_cotizacion||'custom',
-    customQty:auraQ.customQty||'',customPrice:auraQ.customPrice||0,customDur:auraQ.customDur||'',
-    price:auraQ.price||0,iva:auraQ.iva||0,total:auraQ.total||0,grandTotal:auraQ.grandTotal||0,
-    anticipo:auraQ.anticipo||0,saldo:auraQ.saldo||0,anticipoPct:auraQ.anticipoPct||50,
-    factura:auraQ.factura||false,flavors:auraQ.flavors||[],maxFlavors:auraQ.maxFlavors||3,
-    paqLabel:auraQ.paqLabel||'',saboresTxt:auraQ.saboresTxt||[]
+    folio:auraQ.folio,nombre:auraQ.nombre,tel:auraQ.tel,
+    fecha:auraQ.fecha,hora:auraQ.hora,tipo:auraQ.tipo,
+    lugar:auraQ.lugar,dir:auraQ.dir,
+    cat:auraQ.cat,paq:auraQ.paq,tipo_cotizacion:auraQ.tipo_cotizacion,
+    customQty:auraQ.customQty,customPrice:auraQ.customPrice,customDur:auraQ.customDur,
+    price:auraQ.price,iva:auraQ.iva,total:auraQ.total,grandTotal:auraQ.grandTotal,
+    anticipo:auraQ.anticipo,saldo:auraQ.saldo,anticipoPct:auraQ.anticipoPct,
+    factura:auraQ.factura,flavors:auraQ.flavors,maxFlavors:auraQ.maxFlavors,
+    paqLabel:auraQ.paqLabel,saboresTxt:auraQ.saboresTxt||[]
   };
-  let datosB64;
-  try{
-    datosB64=btoa(unescape(encodeURIComponent(JSON.stringify(datos))));
-    toast('2/4 btoa OK len:'+datosB64.length);
-  }catch(err){toast('❌ btoa:'+err.message);return;}
-  let firmaLink,msg;
-  try{
-    firmaLink=GITHUB_URL+'?folio='+encodeURIComponent(folio)+'&d='+encodeURIComponent(datosB64);
-    msg='FIRMA TU CONTRATO\n\nHola '+nombre+'!\n\n'+firmaLink+'\n\nFolio: '+folio;
-    toast('3/4 msg OK');
-  }catch(err){toast('❌ msg:'+err.message);return;}
-  try{
-    const old=document.getElementById('firma-link-modal');if(old)old.remove();
-    const m=document.createElement('div');
-    m.id='firma-link-modal';
-    m.style.cssText='position:fixed;inset:0;z-index:30000;background:rgba(0,0,0,.95);display:flex;align-items:center;justify-content:center;padding:16px;';
-    m.innerHTML='<div style="background:#141414;border:1.5px solid #c9a84c;border-radius:16px;padding:24px;width:100%;max-width:440px;color:#fff;">'
-      +'<div style="font-size:15px;font-weight:800;color:#c9a84c;margin-bottom:16px;">✍️ Enviar link de firma</div>'
-      +'<div style="background:#0a0a0a;border:1px solid #333;border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:#ccc;word-break:break-all;">'+msg+'</div>'
-      +'<button onclick="copiarTexto(this.previousElementSibling.innerText,this)" style="width:100%;background:#c9a84c;color:#000;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;margin-bottom:8px;">📋 Copiar mensaje</button>'
-      +'<button onclick="document.getElementById('firma-link-modal').remove()" style="width:100%;background:#1a1a1a;color:#666;border:1px solid #333;border-radius:10px;padding:11px;font-size:13px;cursor:pointer;">✕ Cerrar</button>'
-      +'</div>';
-    document.body.appendChild(m);
-    toast('4/4 modal OK');
-  }catch(err){toast('❌ modal:'+err.message);}
+  const datosB64=btoa(unescape(encodeURIComponent(JSON.stringify(datos))));
+  const firmaLink=`${GITHUB_URL}?folio=${encodeURIComponent(folio)}&d=${datosB64}`;
+  const msg=`✍️ *FIRMA TU CONTRATO — AURA MOBILE BAR* 🐾\n\nHola ${nombre}!\n\nTu cotización está lista. Abre este link para leer y firmar tu contrato:\n\n👉 ${firmaLink}\n\n📋 *Folio:* ${folio}\n📅 *Evento:* ${fecha}\n\nFirma con tu dedo al final del contrato 🌟\n_— Aura Mobile Bar_`;
+
+  const old=document.getElementById('firma-link-modal');if(old)old.remove();
+  const m=document.createElement('div');
+  m.id='firma-link-modal';
+  m.style.cssText='position:fixed;inset:0;z-index:30000;background:rgba(0,0,0,.95);display:flex;align-items:center;justify-content:center;padding:16px;';
+  const telDisplay=tel?('+'+(tel.startsWith('52')?tel:'52'+tel)):'(sin teléfono)';
+  m.innerHTML=`
+    <div style="background:#141414;border:1.5px solid #c9a84c;border-radius:16px;padding:20px;width:100%;max-width:440px;">
+      <div style="font-size:15px;font-weight:800;color:#c9a84c;margin-bottom:4px;">✍️ Enviar link de firma</div>
+      <div style="font-size:12px;color:#777;margin-bottom:14px;">Manda este mensaje desde tu <strong style="color:#25D366;">WA Business</strong></div>
+
+      <div style="background:#0a0a0a;border:1px solid #333;border-radius:10px;padding:12px;margin-bottom:10px;">
+        <div style="font-size:10px;color:#555;margin-bottom:4px;">PARA</div>
+        <div style="font-size:15px;font-weight:700;color:#fff;">${nombre} &nbsp;<span style="color:#555;font-size:12px;">${telDisplay}</span></div>
+      </div>
+
+      <div style="background:#0a0a0a;border:1px solid #333;border-radius:10px;padding:12px;margin-bottom:14px;max-height:150px;overflow-y:auto;">
+        <div style="font-size:10px;color:#555;margin-bottom:4px;">MENSAJE A ENVIAR</div>
+        <div id="firma-msg-text" style="font-size:11px;color:#ccc;white-space:pre-wrap;line-height:1.5;">${msg.replace(/\*/g,'')}</div>
+      </div>
+
+      <button id="btn-copiar-firma" onclick="copiarTexto(document.getElementById('firma-msg-text').innerText, this)" style="width:100%;background:#c9a84c;color:#000;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;margin-bottom:8px;">📋 Copiar mensaje</button>
+      <button onclick="document.getElementById('firma-link-modal').remove()" style="width:100%;background:#1a1a1a;color:#666;border:1px solid #333;border-radius:10px;padding:11px;font-size:13px;cursor:pointer;">✕ Cerrar</button>
+    </div>`;
+  document.body.appendChild(m);
+  }catch(err){toast('❌ '+err.message);}
 }
 
 function copyBank(txt,msg){navigator.clipboard.writeText(txt).then(()=>toast(msg)).catch(()=>toast('Copia: '+txt));}
